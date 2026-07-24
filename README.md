@@ -313,15 +313,17 @@ Ensure `sapjco3.dll` (Windows) or `libsapjco3.so` (Linux) is in the path specifi
 
 ## 概述
 
-REST 版基于 [HariePrasad/sap-abap-mcp-server](https://github.com/HariePrasad/sap-abap-mcp-server) 开源项目，通过 ADT REST API 与 SAP 系统通信，不依赖 JCo。
+REST 版基于 [mario-andreschak/mcp-abap-adt](https://github.com/mario-andreschak/mcp-abap-adt) 开源项目，通过 ADT REST API 与 SAP 系统通信，不依赖 JCo。
+
+**本仓库已将 MCP Server 源码作为 git submodule 包含在 `server/` 目录中，克隆后即可构建使用。**
 
 | 项目 | 详情 |
 |------|------|
-| **GitHub** | https://github.com/HariePrasad/sap-abap-mcp-server |
+| **源码 (submodule)** | `server/` → [github.com/mario-andreschak/mcp-abap-adt](https://github.com/mario-andreschak/mcp-abap-adt) |
 | **许可证** | MIT |
-| **技术栈** | Node.js (打包为独立 exe) |
+| **技术栈** | TypeScript / Node.js |
 | **VS Code 扩展** | VS Code Marketplace 搜索 "ABAP MCP" (publisher: HariePrasad) |
-| **平台** | Windows (exe)；其他平台可从源码运行 |
+| **平台** | Windows / macOS / Linux（从源码运行） |
 
 ## Prerequisites（REST 版）
 
@@ -348,20 +350,44 @@ ext install HariePrasad.abap-mcp
 3. 编辑 `env` 部分填入 SAP 凭据
 4. 重新加载 VS Code → 即可使用
 
-### 方式 2：独立运行（用于非 VS Code 的 AI 工具）
+### 方式 2：从本仓库 submodule 构建（推荐，一站式）
 
 ```bash
-# 1. 克隆源码
-git clone https://github.com/HariePrasad/sap-abap-mcp-server.git
-cd sap-abap-mcp-server
+# 1. 克隆本仓库（含 submodule）
+git clone --recurse-submodules https://github.com/senyLiang/abap-mcp.git
+cd abap-mcp
+
+# 2. 进入 server 目录，安装依赖
+cd server
+npm install
+
+# 3. 构建
+npm run build
+
+# 4. 运行 MCP Server
+node dist/index.js
+```
+
+> 如果克隆时忘记加 `--recurse-submodules`，补救：
+> ```bash
+> git submodule init
+> git submodule update
+> ```
+
+### 方式 3：独立克隆上游源码
+
+```bash
+# 1. 直接克隆上游项目
+git clone https://github.com/mario-andreschak/mcp-abap-adt.git
+cd mcp-abap-adt
 
 # 2. 安装依赖
 npm install
 
-# 3. 构建（如果需要 exe）
+# 3. 构建
 npm run build
 
-# 4. 或者直接运行
+# 4. 运行
 node dist/index.js
 ```
 
