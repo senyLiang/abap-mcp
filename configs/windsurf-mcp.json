@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "abap-mcp": {
+      "type": "stdio",
+      "command": "java",
+      "args": [
+        "-Djava.net.preferIPv4Stack=true",
+        "-Djco.middleware.snc_lib=${SNC_LIB}",
+        "-Dloader.path=${SAPJCO_PATH}",
+        "-Djava.library.path=${SAPJCO_PATH};${SNC_LIB_DIR}",
+        "-jar",
+        "${ABAP_MCP_JAR}",
+        "--mcp",
+        "--sap.adt.dangerous-operations.enabled=true"
+      ],
+      "env": {
+        "SNC_LIB": "${SNC_LIB}",
+        "_JAVA_OPTIONS": "-Djava.net.preferIPv4Stack=true -Djco.middleware.snc_lib=${SNC_LIB}"
+      }
+    }
+  }
+}

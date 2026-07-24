@@ -1,0 +1,21 @@
+# Dependencies (licensed SAP binaries)
+lib/
+*.dll
+*.so
+*.jar
+
+# Credentials
+.sap-systems.json
+
+# IDE specific (generated locally)
+.idea/
+.vscode/
+.cursor/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Java
+*.class
+*.log

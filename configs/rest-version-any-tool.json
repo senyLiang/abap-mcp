@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "abap-mcp": {
+      "type": "stdio",
+      "command": "${ABAP_MCP_EXE}",
+      "args": [],
+      "env": {
+        "SAP_URL": "https://YOUR_SAP_HOST:44300",
+        "SAP_USERNAME": "YOUR_USERNAME",
+        "SAP_PASSWORD": "YOUR_PASSWORD",
+        "SAP_CLIENT": "100",
+        "SAP_LANGUAGE": "en",
+        "TLS_REJECT_UNAUTHORIZED": "0",
+        "HTTP_PROXY": "",
+        "HTTPS_PROXY": ""
+      }
+    }
+  },
+  "_comments": {
+    "instructions": "REST version (no JCo needed). Replace placeholders:",
+    "ABAP_MCP_EXE": "Path to abap-mcp.exe (from VS Code extension or built from source)",
+    "SAP_URL": "SAP system URL with port (HTTPS)",
+    "SAP_USERNAME": "SAP dialog user with ADT authorization",
+    "SAP_CLIENT": "SAP client number (e.g., 100, 001)",
+    "TLS_REJECT_UNAUTHORIZED": "Set to '0' for self-signed certs (test only)",
+    "PROXY": "Remove or leave empty if no proxy needed"
+  }
+}

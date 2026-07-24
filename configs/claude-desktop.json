@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "abap-mcp": {
+      "command": "java",
+      "args": [
+        "-Djava.net.preferIPv4Stack=true",
+        "-Djco.middleware.snc_lib=${SNC_LIB}",
+        "-Dloader.path=${SAPJCO_PATH}",
+        "-Djava.library.path=${SAPJCO_PATH};${SNC_LIB_DIR}",
+        "-jar",
+        "${ABAP_MCP_JAR}",
+        "--mcp",
+        "--sap.adt.dangerous-operations.enabled=true"
+      ],
+      "env": {
+        "SNC_LIB": "${SNC_LIB}",
+        "_JAVA_OPTIONS": "-Djava.net.preferIPv4Stack=true -Djco.middleware.snc_lib=${SNC_LIB}"
+      }
+    }
+  },
+  "_comments": {
+    "instructions": "Replace all ${...} placeholders with your local paths:",
+    "SNC_LIB": "Path to sapcrypto.dll (e.g., C:\\Program Files\\SAP\\FrontEnd\\SecureLogin\\lib\\sapcrypto.dll)",
+    "SNC_LIB_DIR": "Directory containing sapcrypto.dll",
+    "SAPJCO_PATH": "Directory containing sapjco3.dll and sapjco3.jar",
+    "ABAP_MCP_JAR": "Full path to jco-service-1.0.0-v5.jar"
+  }
+}

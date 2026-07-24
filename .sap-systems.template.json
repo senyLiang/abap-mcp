@@ -1,0 +1,29 @@
+{
+  "systems": [
+    {
+      "system_id": "dev",
+      "url": "https://YOUR_HOST:44300",
+      "client": "001",
+      "sysnr": "00",
+      "snc_partnername": "p/secude:CN=YOUR_SID, O=SAP-AG, C=DE",
+      "snc_qop": 9,
+      "set_as_default": true,
+      "description": "Development system (SNC)"
+    },
+    {
+      "system_id": "sandbox",
+      "url": "https://YOUR_SANDBOX_HOST:44300",
+      "client": "100",
+      "sysnr": "00",
+      "username": "YOUR_USER",
+      "password": "YOUR_PASSWORD",
+      "description": "Sandbox system (Basic Auth)"
+    }
+  ],
+  "_instructions": [
+    "1. Copy this file to .sap-systems.json",
+    "2. Replace all YOUR_* placeholders with actual values",
+    "3. Remove systems you don't need",
+    "4. NEVER commit .sap-systems.json to Git"
+  ]
+}
