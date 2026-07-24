@@ -520,3 +520,183 @@ REST 版提供的核心工具：
     └── 否 → 用 REST 版 + 公开 SAP 试用系统
               (SAP BTP Trial: https://developers.sap.com)
 ```
+
+---
+
+# 外部用户完整使用流程（VS Code + REST 版）
+
+> 以下流程面向非 SAP 内部人员，从零开始到成功使用 ABAP MCP Server。
+
+## 前提条件确认
+
+| # | 条件 | 如何获取 |
+|---|------|----------|
+| 1 | Node.js 18+ | https://nodejs.org 下载安装，终端运行 `node -v` 验证 |
+| 2 | Git | https://git-scm.com 下载安装 |
+| 3 | VS Code | https://code.visualstudio.com 下载安装 |
+| 4 | AI 扩展 | VS Code 中安装 GitHub Copilot 或 Claude Code 扩展 |
+| 5 | SAP 系统账号 | 找你的 SAP 管理员获取（用户名、密码、Client） |
+| 6 | SAP 系统 URL | 格式：`https://主机名:端口`（如 `https://sap.company.com:44300`） |
+| 7 | 网络连通 | 确保能访问 SAP 系统（VPN / 直连） |
+
+## Step 1：克隆仓库
+
+```bash
+git clone --recurse-submodules https://github.com/senyLiang/abap-mcp.git
+cd abap-mcp
+```
+
+> 如果忘记加 `--recurse-submodules`：
+> ```bash
+> cd abap-mcp
+> git submodule init
+> git submodule update
+> ```
+
+## Step 2：构建 MCP Server
+
+```bash
+cd server
+npm install
+npm run build
+```
+
+构建成功后会生成 `server/dist/index.js`，这就是 MCP Server 的入口文件。
+
+验证构建成功：
+```bash
+node dist/index.js --help
+# 或者看 dist/ 目录是否生成了 .js 文件
+ls dist/
+```
+
+## Step 3：配置 VS Code MCP
+
+回到仓库根目录，在你的**工作项目**中创建 `.vscode/mcp.json`：
+
+```bash
+cd ..  # 回到 abap-mcp 根目录
+```
+
+在你要进行 ABAP 开发的 VS Code 工作区中，创建 `.vscode/mcp.json`：
+
+```json
+{
+  "servers": {
+    "abap-mcp": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["C:/path/to/abap-mcp/server/dist/index.js"],
+      "env": {
+        "SAP_URL": "https://your-sap-host:44300",
+        "SAP_USERNAME": "your_username",
+        "SAP_PASSWORD": "your_password",
+        "SAP_CLIENT": "100",
+        "SAP_LANGUAGE": "en",
+        "TLS_REJECT_UNAUTHORIZED": "0"
+      }
+    }
+  }
+}
+```
+
+**替换说明：**
+
+| 占位符 | 替换为 | 示例 |
+|--------|--------|------|
+| `C:/path/to/abap-mcp/server/dist/index.js` | server 构建产物的绝对路径 | `C:/Users/john/abap-mcp/server/dist/index.js` |
+| `your-sap-host:44300` | SAP 系统地址和端口 | `sap-dev.company.com:44300` |
+| `your_username` | SAP 对话用户 | `DEVELOPER01` |
+| `your_password` | SAP 密码 | `xxxxxxxx` |
+| `100` | SAP Client 编号 | `001`、`100`、`800` 等 |
+
+## Step 4：重新加载 VS Code
+
+按 `Ctrl+Shift+P` → 输入 `Reload Window` → 回车
+
+VS Code 会启动 MCP Server 并连接到你的 SAP 系统。
+
+## Step 5：验证连接
+
+### 使用 GitHub Copilot
+
+打开 Copilot Chat，输入：
+```
+@workspace 使用 MCP 工具搜索 SAP 系统中所有以 Z 开头的类
+```
+
+### 使用 Claude Code
+
+在 Claude Code 终端中输入：
+```
+搜索 SAP 系统中所有以 Z 开头的程序
+```
+
+如果返回对象列表 → **连接成功！**
+
+## Step 6：开始开发
+
+连接成功后，你可以通过 AI 助手执行以下操作：
+
+```
+# 查看类源码
+"读取类 ZCL_MY_CLASS 的源码"
+
+# 搜索对象
+"搜索所有以 ZFI 开头的 CDS 视图"
+
+# 查看表结构
+"显示表 SFLIGHT 的字段定义"
+
+# 查询数据
+"从表 SCARR 中查询所有航空公司"
+
+# 分析依赖
+"ZCL_MY_CLASS 在哪里被使用了"
+
+# 创建对象（$TMP 包）
+"在 $TMP 包中创建一个新的 ABAP 类 ZCL_TEST"
+
+# 查找帮助
+"搜索 SAP 帮助：ABAP RAP behavior definition"
+```
+
+---
+
+## 常见问题 FAQ
+
+### Q: 我没有 SAP 系统怎么办？
+
+可以申请 SAP BTP Trial（免费）：
+1. 访问 https://developers.sap.com
+2. 注册账号 → 申请 BTP Trial
+3. 在 BTP 中创建 ABAP Environment 实例
+4. 获取系统 URL 和凭据
+
+### Q: 支持哪些 SAP 系统？
+
+任何启用了 ADT 服务的 SAP 系统：
+- SAP S/4HANA (On-Premise)
+- SAP S/4HANA Cloud, private edition
+- SAP BTP, ABAP Environment (Steampunk)
+- SAP NetWeaver 7.50+（需启用 ADT）
+
+### Q: MCP Server 启动后什么反应都没有？
+
+这是正常的。MCP Server 使用 stdio 通信，不会在终端显示输出。它等待 AI 工具通过 stdin 发送请求。验证方法是通过 AI 助手发送命令。
+
+### Q: 可以同时连接多个 SAP 系统吗？
+
+REST 版一次连接一个系统。如需切换，修改 `.vscode/mcp.json` 中的环境变量后重新加载 VS Code。JCo 版支持多系统同时连接。
+
+### Q: 代理怎么配？
+
+在 `env` 中添加：
+```json
+"HTTP_PROXY": "http://user:pass@proxy.company.com:8080",
+"HTTPS_PROXY": "http://user:pass@proxy.company.com:8080"
+```
+
+### Q: macOS / Linux 能用吗？
+
+可以。从源码构建（`npm install && npm run build`）后用 `node dist/index.js` 运行，不依赖 Windows 特定组件。
